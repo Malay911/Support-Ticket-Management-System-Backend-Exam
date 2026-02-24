@@ -48,7 +48,7 @@ A robust backend helpdesk system built with **NestJS**, **TypeORM**, and **MySQL
     DB_USERNAME=root
     DB_PASSWORD=your_password
     DB_DATABASE=supportticket
-    JWT_SECRET=your_jwt_secret
+    JWT_SECRET=secretKey
     ```
 
 4.  **Run the application**:
@@ -99,3 +99,4 @@ src/
 -   **Status Flow**: Status can only move forward: `OPEN` → `IN_PROGRESS` → `RESOLVED` → `CLOSED`.
 -   **Assignment**: Tickets can only be assigned to users with the `SUPPORT` or `MANAGER` role.
 -   **Security**: All endpoints (except login) require a valid `Bearer` token in the `Authorization` header.
+
