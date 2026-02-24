@@ -1,98 +1,101 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Support Ticket Management System
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A robust backend helpdesk system built with **NestJS**, **TypeORM**, and **MySQL**. This system allows employees to raise support tickets, support staff to manage and resolve them, and managers to oversee the entire process with granular Role-Based Access Control (RBAC).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Core Features
 
-## Description
+-   **Authentication & Authorization**: Secure JWT-based login and password hashing using bcrypt.
+-   **Role-Based Access Control (RBAC)**: Distinct permissions for `MANAGER`, `SUPPORT`, and `USER` roles.
+-   **Ticket Lifecycle Management**: Full lifecycle support: `OPEN` → `IN_PROGRESS` → `RESOLVED` → `CLOSED`.
+-   **Ticket Assignment**: Managers and support staff can assign tickets to relevant support personnel.
+-   **Commenting System**: Interactive threads on tickets for collaborative troubleshooting.
+-   **Audit Logging**: Automatic tracking of every status change in `TicketStatusLogs`.
+-   **Input Validation**: Strict validation for ticket titles, descriptions, and enum values.
+-   **Swagger Documentation**: Interactive API documentation for easy exploration.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🛠️ Tech Stack
 
-## Project setup
+-   **Framework**: [NestJS](https://nestjs.com/)
+-   **Database**: MySQL
+-   **ORM**: [TypeORM](https://typeorm.io/)
+-   **Security**: JWT (Passport), bcrypt
+-   **API Documentation**: Swagger/OpenAPI
 
-```bash
-$ npm install
+## 📋 Prerequisites
+
+-   [Node.js](https://nodejs.org/) (v16.x or higher)
+-   [MySQL](https://www.mysql.com/) (v8.0 or higher)
+-   npm or yarn
+
+## ⚙️ Installation & Setup
+
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd support-ticket-management
+    ```
+
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+
+3.  **Configure Environment Variables**:
+    Create a `.env` file in the root directory and add your MySQL credentials:
+    ```env
+    DB_HOST=localhost
+    DB_PORT=3306
+    DB_USERNAME=root
+    DB_PASSWORD=your_password
+    DB_DATABASE=supportticket
+    JWT_SECRET=your_jwt_secret
+    ```
+
+4.  **Run the application**:
+    ```bash
+    # Development mode
+    npm run start:dev
+
+    # Production mode
+    npm run start:prod
+    ```
+
+## 🔐 Access Matrix (RBAC)
+
+| Endpoint | Method | Roles allowed | Description |
+|---|---|---|---|
+| `/auth/login` | POST | Public | Login to receive JWT token |
+| `/users` | POST | `MANAGER` | Create new users |
+| `/users` | GET | `MANAGER` | List all users |
+| `/tickets` | POST | `USER`, `MANAGER` | Create a new support ticket |
+| `/tickets` | GET | `MANAGER`, `SUPPORT`, `USER` | List relevant tickets |
+| `/tickets/{id}/assign` | PATCH | `MANAGER`, `SUPPORT` | Assign a ticket to a staff member |
+| `/tickets/{id}/status` | PATCH | `MANAGER`, `SUPPORT` | Update ticket status |
+| `/tickets/{id}` | DELETE | `MANAGER` | Delete a ticket |
+| `/tickets/{id}/comments` | POST | All | Add a comment to a ticket |
+| `/tickets/{id}/comments` | GET | All | List comments for a ticket |
+
+## 📖 API Documentation
+
+Once the server is running, you can access the interactive Swagger documentation at:
+`http://localhost:3000/docs`
+
+## 📂 Project Structure
+
+```text
+src/
+├── auth/          # Authentication logic & JWT guards
+├── tickets/       # Ticket management & Status logs
+├── comments/      # Ticket commenting system
+├── users/         # User management
+├── roles/         # Role definitions (MANAGER, SUPPORT, USER)
+├── main.ts        # Application entry point & Swagger config
+└── app.module.ts  # Root module
 ```
 
-## Compile and run the project
+## ⚖️ Business Rules
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+-   **Validation**: Ticket titles must be at least 5 characters; descriptions at least 10.
+-   **Status Flow**: Status can only move forward: `OPEN` → `IN_PROGRESS` → `RESOLVED` → `CLOSED`.
+-   **Assignment**: Tickets can only be assigned to users with the `SUPPORT` or `MANAGER` role.
+-   **Security**: All endpoints (except login) require a valid `Bearer` token in the `Authorization` header.
